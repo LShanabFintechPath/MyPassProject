@@ -26,7 +26,7 @@ public class UserService {
 		return user;
 	}
 
-	public UserDto findUserbyId(int id) {
+	public UserDto finduserbyId(int id) {
 		return userRepository.findById(id).orElse(null);
 	}
 
@@ -37,6 +37,9 @@ public class UserService {
 	public Page<UserDto> findAllUsers(Pageable page) {
 		return userRepository.findAll(page);
 	}
+	
+	
+	
 	
 
 	

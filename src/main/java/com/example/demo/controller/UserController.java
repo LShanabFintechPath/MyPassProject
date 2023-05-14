@@ -14,13 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.UserDto;
 import com.example.demo.service.UserService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.SwaggerDefinition;
 
 @RestController
 @RequestMapping("/apis/users")
+@Api(value = "pet", description = "Operations about pets", tags = {"USER"})
+@SwaggerDefinition
 public class UserController {
 
 	@Autowired
@@ -32,6 +38,7 @@ public class UserController {
 		this.userService = userService;
 	}
 
+	
 	@ApiOperation(value = "add's a user and saves it to the database", notes = "saves to h2 database which will be wiped clean if you restart the API")
 	@PostMapping(value = "/v1/newUser", consumes = "application/json", produces = "application/json")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = UserDto.class),
@@ -41,10 +48,11 @@ public class UserController {
 			@ApiResponse(code = 500, message = "Internal Server Error")
 
 	})
-	public UserDto addUser(@RequestBody UserDto userDto) {
-		return userService.addUser(userDto);
+	public UserDto addUser(@RequestBody UserDto user) {
+		return userService.addUser(user);
 	}
 
+	@ApiImplicitParams( {@ApiImplicitParam(dataType = "String", name = "authorization", paramType = "header")})
 	@ApiOperation(value = "get a user by id", notes = "saves to h2 database which will be wiped clean if you restart the API")
 	@ApiParam(value = "the id that you insterted previously in the add endpoint", required = true)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = UserDto.class),
@@ -55,7 +63,7 @@ public class UserController {
 	})
 	@GetMapping(value = "/v1/{id}", produces = "application/json")
 	public UserDto getUserById(@PathVariable int id) {
-		return userService.findUserbyId(id);
+		return userService.finduserbyId(id);
 	}
 
 	@ApiOperation(value = "deletes a user by his id", notes = "saves to h2 database which will be wiped clean if you restart the API")
@@ -81,5 +89,7 @@ public class UserController {
 	public Page<UserDto> findAllUsers(Pageable page) {
 		return userService.findAllUsers(page);
 	}
+	
+	
 
 }
